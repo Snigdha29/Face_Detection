@@ -11,7 +11,7 @@ var secretAccessKey=AWS.config.credentials.secretAccessKey;
 var uuid = require("node-uuid");
 var fs = require("fs-extra");
 var path = require("path");
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 var recognition = new AWS.Rekognition({region: AWS.config.region});
 
@@ -19,7 +19,7 @@ var recognition = new AWS.Rekognition({region: AWS.config.region});
 	Image: {     
     S3Object: {
       Bucket: "detectface",
-      Name: "Sample 3.jpg"
+      Name: "Sample 2.jpg"
      }
   },
   Attributes: [
@@ -27,18 +27,33 @@ var recognition = new AWS.Rekognition({region: AWS.config.region});
   ]
 	};
 
-	
-recognition.detectFaces(params, function(error, response) {
+app.get('/detect', function(req, res) {
+    recognition.detectFaces(params, function(error, response) {
  if (error) console.log(error, error.stack); // an error occurred
  else 
  {
   var faceDetails = response.FaceDetails[0];
-  console.log("Person is smiling :"+faceDetails.Smile.Value);
+  /*console.log("Person is smiling :"+faceDetails.Smile.Value);
   console.log("Person is in a mood :"+faceDetails.Emotions[0].Type);
   console.log("Person is aged between: "+faceDetails.AgeRange.Low+" and "+faceDetails.AgeRange.High);
   console.log("Person gender :"+faceDetails.Gender.Value);
   console.log("Person has EyesOpen :"+faceDetails.EyesOpen.Value);
-  console.log("\n");
+  console.log("\n");*/
+  res.send("Person is smiling :"+faceDetails.Smile.Value+" Person is in a mood :"+faceDetails.Emotions[0].Type+" Person is aged between: "+faceDetails.AgeRange.Low+" and "+faceDetails.AgeRange.High+" Person gender :"+faceDetails.Gender.Value+" Person has EyesOpen :"+faceDetails.EyesOpen.Value);
  }
 });
+});
+
+app.listen(5555);
+
+
+
+   
+
+
+
+
+
+
+ 
    
