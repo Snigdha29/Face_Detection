@@ -1,21 +1,19 @@
 var express = require("express");
 var app = express();
 
-var config = require("./config")
+//var config = require("./config")
 var AWS = require("aws-sdk");
 AWS.config.update({region: "us-east-1"});
 
-
 var accessKeyID=AWS.config.credentials.accessKeyId;
 var secretAccessKey=AWS.config.credentials.secretAccessKey;
-
 
 var uuid = require("node-uuid");
 var fs = require("fs-extra");
 var path = require("path");
 
 
-var recognition = new AWS.Rekognition({region: config.region});
+var recognition = new AWS.Rekognition({region: AWS.config.region});
 
 	var params={	 	
 	Image: {     
@@ -43,24 +41,4 @@ recognition.detectFaces(params, function(error, response) {
   console.log("\n");
  }
 });
-
-
-
-   
-
-
-
-
-
-
- 
-   
-   
-
-
-
-
-
-
- 
    
