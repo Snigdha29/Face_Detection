@@ -5,6 +5,13 @@ var app = express();
 var AWS = require("aws-sdk");
 AWS.config.update({region: "us-east-1"});
 
+var proxy = require("proxy-agent");
+AWS.config.update({
+  httpOptions: {
+    agent: proxy('http://proxy.ebiz.verizon.com:80')
+  }
+});
+
 var accessKeyID=AWS.config.credentials.accessKeyId;
 var secretAccessKey=AWS.config.credentials.secretAccessKey;
 
@@ -19,7 +26,7 @@ var recognition = new AWS.Rekognition({region: AWS.config.region});
 	Image: {     
     S3Object: {
       Bucket: "detectface",
-      Name: "Sample 2.jpg"
+      Name: "Sample 4.jpg"
      }
   },
   Attributes: [
@@ -39,21 +46,10 @@ app.get('/detect', function(req, res) {
   console.log("Person gender :"+faceDetails.Gender.Value);
   console.log("Person has EyesOpen :"+faceDetails.EyesOpen.Value);
   console.log("\n");*/
-  res.send("Person is smiling :"+faceDetails.Smile.Value+" Person is in a mood :"+faceDetails.Emotions[0].Type+" Person is aged between: "+faceDetails.AgeRange.Low+" and "+faceDetails.AgeRange.High+" Person gender :"+faceDetails.Gender.Value+" Person has EyesOpen :"+faceDetails.EyesOpen.Value);
+  res.send("Person is smiling :"+faceDetails.Smile.Value+" Person is in a mood :"+faceDetails.Emotions[0].Type+" Surity:"+(faceDetails.Emotions[0].Confidence).toFixed(2)+"% Person is aged between: "+faceDetails.AgeRange.Low+" and "+faceDetails.AgeRange.High+" Person gender :"+faceDetails.Gender.Value+" Person has EyesOpen :"+faceDetails.EyesOpen.Value);
  }
 });
 });
 
 app.listen(5555);
-
-
-
-   
-
-
-
-
-
-
- 
    
